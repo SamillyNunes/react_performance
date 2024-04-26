@@ -1,27 +1,16 @@
-import { useRef } from 'react'
+import { useForm } from 'react-hook-form';
+
 import './App.css'
 import { Header } from './Header';
 
 
 function App() {
 
-  // ==============
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const usernameRef = useRef(null);
-  const descriptionRef = useRef(null);
-  const typeRef = useRef('user');
+  const { register, handleSubmit } = useForm();
 
-  function handleSave(e){
-    e.preventDefault();
-
-    console.log({
-      name: nameRef.current?.value,
-      email: emailRef.current?.value,
-      username: usernameRef.current?.value,
-      description: descriptionRef.current?.value,
-      type: typeRef.current?.value,
-    })
+  function handleSave(data){
+    console.log(data);
+    
   }
 
 
@@ -30,41 +19,44 @@ function App() {
       <h1>React</h1>
       <Header/>
 
-      <form className="form" onSubmit={handleSave}>
+      <form className="form" onSubmit={handleSubmit(handleSave)}>
         <input
           type="text"
-          ref={nameRef}
-          // value={name}
-          // onChange={ (event) => setName(event.target.value) }
           placeholder="Digite seu nome..."
           className="input"
+          {...register("name", { required:true })}
+          id='name'
         />
 
         <input
           type="text"
-          ref={emailRef}
           placeholder="Digite seu email..."
           className="input"
+          {...register("email", { required:true })}
+          id='email'
         />
 
         <input
           type="text"
-          ref={usernameRef}
           placeholder="Digite seu username..."
           className="input"
+          {...register("username", { required:true, maxLength:5 })}
+          id='username'
         />
 
         <textarea
           type="text"
-          ref={descriptionRef}
           placeholder="Digite sua descriçao..."
           className="input"
+          {...register("description")}
+          id='description'
         ></textarea>
 
 
         <select  
           className="select"
-          ref={typeRef}
+          {...register("type")}
+          id='type'
         >
           <option value="user">user</option>
           <option value="admin">admin</option>
