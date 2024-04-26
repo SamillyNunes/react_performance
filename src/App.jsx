@@ -1,24 +1,26 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './App.css'
 import { Header } from './Header';
 
 
 function App() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [username, setUsername] = useState("")
-  const [description, setDescription] = useState("")
-  const [type, setType] = useState("user")
+
+  // ==============
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const usernameRef = useRef(null);
+  const descriptionRef = useRef(null);
+  const typeRef = useRef('user');
 
   function handleSave(e){
     e.preventDefault();
 
     console.log({
-      name,
-      email,
-      username,
-      description,
-      type,
+      name: nameRef.current?.value,
+      email: emailRef.current?.value,
+      username: usernameRef.current?.value,
+      description: descriptionRef.current?.value,
+      type: typeRef.current?.value,
     })
   }
 
@@ -31,32 +33,30 @@ function App() {
       <form className="form" onSubmit={handleSave}>
         <input
           type="text"
-          value={name}
-          onChange={ (event) => setName(event.target.value) }
+          ref={nameRef}
+          // value={name}
+          // onChange={ (event) => setName(event.target.value) }
           placeholder="Digite seu nome..."
           className="input"
         />
 
         <input
           type="text"
-          value={email}
-          onChange={ (event) => setEmail(event.target.value) }
+          ref={emailRef}
           placeholder="Digite seu email..."
           className="input"
         />
 
         <input
           type="text"
-          value={username}
-          onChange={ (event) => setUsername(event.target.value) }
+          ref={usernameRef}
           placeholder="Digite seu username..."
           className="input"
         />
 
         <textarea
           type="text"
-          value={description}
-          onChange={ (event) => setDescription(event.target.value) }
+          ref={descriptionRef}
           placeholder="Digite sua descriçao..."
           className="input"
         ></textarea>
@@ -64,8 +64,7 @@ function App() {
 
         <select  
           className="select"
-          value={type}
-          onChange={e => setType(e.target.value)}
+          ref={typeRef}
         >
           <option value="user">user</option>
           <option value="admin">admin</option>
