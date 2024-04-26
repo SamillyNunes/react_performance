@@ -1,12 +1,25 @@
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import './App.css'
 import { Header } from './Header';
 
+const schema = z.object({
+  name: z.string().min(1, "O campo nome é obrigatório"),
+  email: z.string().email("Digite um email válido").min(1, "O campo email é obrigatório"),
+  username: z.string().min(3, "O username deve ter pelo menos 3 caracteres")
+    .max(5, "O username deve ter no máximo 5 caracteres"),
+  phone: z.string().min(1, "Campo obrigatório").refine((value)=>/^\d{2} ?\d{9}$/.test(value), {
+    message: "Digite um telefone valido no formato DD + 9 numeros",
+  })
+});
 
 function App() {
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(schema)
+  });
 
   function handleSave(data){
     console.log(data);
@@ -27,6 +40,7 @@ function App() {
           {...register("name", { required:true })}
           id='name'
         />
+        { errors.name && <p className='error' >{ errors.name.message }</p> }
 
         <input
           type="text"
@@ -35,6 +49,7 @@ function App() {
           {...register("email", { required:true })}
           id='email'
         />
+        { errors.email && <p className='error' >{ errors.email.message }</p> }
 
         <input
           type="text"
@@ -43,24 +58,16 @@ function App() {
           {...register("username", { required:true, maxLength:5 })}
           id='username'
         />
-
-        <textarea
+        { errors.username && <p className='error' >{ errors.username.message }</p> }
+        
+        <input
           type="text"
-          placeholder="Digite sua descriçao..."
+          placeholder="Digite seu telefone..."
           className="input"
-          {...register("description")}
-          id='description'
-        ></textarea>
-
-
-        <select  
-          className="select"
-          {...register("type")}
-          id='type'
-        >
-          <option value="user">user</option>
-          <option value="admin">admin</option>
-        </select>
+          {...register("phone", { required:true, maxLength:5 })}
+          id='phone'
+        />
+        { errors.phone && <p className='error' >{ errors.phone.message }</p> }
 
 
         <button className="button" type="submit">Enviar</button>
